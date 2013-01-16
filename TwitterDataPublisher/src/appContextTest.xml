@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:amq="http://activemq.apache.org/schema/core"
+xmlns:jms="http://www.springframework.org/schema/jms"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.7.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.1.xsd">
+
+	<import resource="classpath*:appContext.xml" />
+	
+	<!-- bean id="destination" class="com.mockrunner.mock.jms.MockQueue">
+	<bean id="destination" class="com.mockrunner.mock.jms.MockTopic">
+		<constructor-arg value="TWITTER.USERS" />
+	</bean -->
+
+    <!--  bean id="destinationManager" class="com.mockrunner.jms.DestinationManager"/>
+    <bean id="configurationManager" class="com.mockrunner.jms.ConfigurationManager"/>
+
+    <bean id="connectionFactory" class="com.mockrunner.mock.jms.MockQueueConnectionFactory" >
+        <constructor-arg index="0" ref="destinationManager" />
+        <constructor-arg index="1" ref="configurationManager" />
+    </bean -->
+
+<!-- creates an activemq connection factory using the amq namespace -->
+<amq:connectionFactory id="amqConnectionFactory" brokerURL="${jms.url}" /> 
+<!--  userName="${jms.username}" password="${jms.password}" /-->
+
+<!-- A destination in ActiveMQ 
+Either create a bean of class ActiveMQQueue or ActiveMQTopic 
+Or in JmsTemplate, supply the property pubSubDomain and set the value to either true or false
+-->
+<!--  bean id="destination" class="org.apache.activemq.command.ActiveMQQueue" -->
+<bean id="destination" class="org.apache.activemq.command.ActiveMQTopic">
+	<constructor-arg value="TWITTER_TOPIC.USERS" />
+</bean>
+
+<!-- CachingConnectionFactory Definition, sessionCacheSize property is the number of sessions to cache -->
+<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+    <constructor-arg ref="amqConnectionFactory" />
+    <property name="exceptionListener" ref="jmsExceptionListener" />
+    	    <property name="clientId" value="PHO"/>
+    
+    <!--   property name="sessionCacheSize" value="100" / -->
+</bean>
+
+  
+    
+    <!--  
+    <jms:listener-container concurrency="10" >
+    <jms:listener id="dataReceiver" destination="Queue.Name" ref="queueListener" />
+    </jms:listener-container -->
+    
+    <!-- this is the Message Driven POJO (MDP) -->
+	<bean id="messageListener" class="com.mec.datareceiver.TwitterDataListener" />
+
+	<!-- and this is the message listener container -->
+	<bean id="jmsListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="connectionFactory"/>
+	    <property name="destination" ref="destination"/>
+	    <property name="messageListener" ref="messageListener" />
+	    <property name="pubSubDomain" value="true"/>
+	    <property name="subscriptionDurable" value="true"/>
+	    <property name="DurableSubscriptionName" value="DS_TWITTER_TOPIC.USERS"/>
+	</bean>
+
+</beans>

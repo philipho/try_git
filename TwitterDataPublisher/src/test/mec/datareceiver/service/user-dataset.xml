@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--   !DOCTYPE dataset SYSTEM "dataset.dtd" -->
+<dataset>
+	<user screen_name="tester1" />
+	<user screen_name="tester2" />
+	<user screen_name="tester3" />
+	<!--   table name="user">
+		<column>user_id</column>
+		<column>screen_name</column>
+		<column>create_date</column>
+		<row><value>null</value><value>tester1</value><value>null</value></row>
+		<row><value>null</value><value>tester2</value><value>null</value></row>
+		<row><value>null</value><value>tester3</value><value>null</value></row>
+	</table -->
+	
+	<!--   table name="activity">
+	</table -->
+</dataset>
+
