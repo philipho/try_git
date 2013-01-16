@@ -1,7 +1,7 @@
 package test.mec.datareceiver;
 
 public class Java7Test {
-	final static String value = "one";
+	final static String value = "Two";
 
 	public static void main(String[] args) {
 		switch (value) {
