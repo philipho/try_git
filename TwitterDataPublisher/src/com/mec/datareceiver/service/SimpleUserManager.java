@@ -42,4 +42,6 @@ public class SimpleUserManager implements UserManager {
 	public  void deleteAllUsers() {
 		userDao.deleteAll();
 	}
+
+	// Added a comment here 20190119
 }
